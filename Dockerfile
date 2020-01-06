@@ -18,9 +18,14 @@ RUN apk --no-cache --update add \
     --with-freetype-dir=/usr/include/freetype2 && \
     docker-php-ext-install gd \
   # Install php intl extension
-  && apk add --no-cache icu-dev \
+  && apk --no-cache add icu-dev \
   && docker-php-ext-configure intl --enable-intl \
   && docker-php-ext-install intl \
+  # Install php redis
+  && apk --no-cache add g++ make autoconf \
+  && pecl install redis \
+  && echo extension=redis.so > /usr/local/etc/php/conf.d/redis.ini \
+  && apk del g++ make autoconf \
   && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
 # Composer
